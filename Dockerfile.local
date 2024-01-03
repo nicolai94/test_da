@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -yqq curl gcc procps vim
+
+RUN apt-get install --fix-broken
+RUN pip3 install --upgrade keyrings.alt
+
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
+    cd /usr/local/bin && \
+    ln -s /opt/poetry/bin/poetry && \
+    poetry config virtualenvs.create false
+
+ENV PYTHONPATH=/
+
+WORKDIR /app
+COPY test_da/poetry.lock test_da/pyproject.toml /app
+RUN poetry install
+
+
+WORKDIR /app
+COPY /test_da ./
+RUN chmod +x ./wait-for-it.sh ./start-local.sh
+
+EXPOSE 80
