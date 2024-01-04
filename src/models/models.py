@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import Column, String, Integer, ForeignKey, BigInteger
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from src.db import Base
 from src.models.common import MyModelMixin
