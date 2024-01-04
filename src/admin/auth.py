@@ -20,8 +20,10 @@ class AdminAuth(AuthenticationBackend):
             try:
                 user = session.execute(statement=stmt).one()
             except:
+                logger.info("User not found")
                 raise UserDoesNotExistsException
         token = f'token_{user}'
+
         request.session.update({"access_token": token})
 
         return True

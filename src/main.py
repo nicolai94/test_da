@@ -6,7 +6,6 @@ from starlette.responses import JSONResponse
 from src.admin.auth import AdminAuth
 from src.admin.views.item import ItemAdmin
 from src.admin.views.user import UserAdmin
-from src.api.api import api_router
 from src.db import engine
 from src.config import settings
 from src.exceptions import CustomException
@@ -39,12 +38,10 @@ def create_app() -> FastAPI:
         allow_headers=["timezone", "authcode", "lang", "sessionId", "authorization"],
     )
 
-    application.include_router(api_router, prefix="/api")
-
     @application.exception_handler(CustomException)
     async def custom_exception_handler(request: Request, exc: CustomException) -> JSONResponse:
         return JSONResponse(
-            content={"status": exc.status_code, "code": exc.code, "message": f"{exc.message}"},
+            content={"status": exc.status_code, "message": exc.detail},
             status_code=exc.status_code,
         )
 
