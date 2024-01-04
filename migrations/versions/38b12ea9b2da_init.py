@@ -5,6 +5,7 @@ Revises:
 Create Date: 2024-01-03 10:28:32.846900
 
 """
+from datetime import datetime
 from typing import Sequence, Union
 
 from alembic import op
@@ -24,16 +25,16 @@ def upgrade() -> None:
     sa.Column('login', sa.String(length=255), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.Column("created_at", sa.DateTime(), server_default=str(datetime.now()), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False, server_default=str(datetime.now()), onupdate=str(datetime.now())),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_user'))
     )
     op.create_table('item',
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.Column("created_at", sa.DateTime(), server_default=str(datetime.now()), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False, server_default=str(datetime.now()), onupdate=str(datetime.now())),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], name=op.f('fk_item_user_id_user'), ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_item'))
     )
